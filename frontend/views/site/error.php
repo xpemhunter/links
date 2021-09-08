@@ -8,6 +8,8 @@
 use yii\helpers\Html;
 
 $this->title = $name;
+
+$this->params['breadcrumbs'][] = Yii::t('app', 'Error')
 ?>
 <div class="site-error">
 

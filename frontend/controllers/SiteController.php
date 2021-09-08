@@ -93,6 +93,7 @@ class SiteController extends Controller
      * Go to url
      * @param string $hash
      * @throws NotFoundHttpException
+     * @return mixed
      */
     public function actionGo($hash)
     {
@@ -105,10 +106,12 @@ class SiteController extends Controller
         }
 
         // Update follows actions
-        //
+        $link->updateCounters(['follows_cnt' => 1]);
 
-        // Go
-        ///
+        return $this->render('goto', [
+            'link'    => $link,
+            'timer'     => 2,
+        ]);
     }
 
     /**

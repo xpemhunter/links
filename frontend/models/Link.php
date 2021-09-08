@@ -87,10 +87,14 @@ class Link extends \common\components\BaseActiveRecord
     }
 
     /**
-     * Check is URL is relevant consdidering follows and expires
+     * Check is URL is relevant considering follows and expires
      */
     public function getIsRelevant()
     {
-
+        return (
+            (!$this->follows_limit || $this->follows_limit > $this->follows_cnt)
+            &&
+            ($this->expired_at > date('Y-m-d H:i:s'))
+        );
     }
 }

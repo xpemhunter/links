@@ -39,7 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format' =>  'raw',
                         'value' => function ($model) {
                             /* @var \frontend\models\Link $model */
-                            return Html::a($model->url, ['/site/go', 'hash' => $model->hash]);
+                            return Html::a($model->url, ['/site/go', 'hash' => $model->hash], [
+                                'data-pjax' => 0,
+                            ]);
                         },
                     ],
                     'follows_cnt',
