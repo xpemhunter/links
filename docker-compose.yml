@@ -1,0 +1,59 @@
+version: '3.2'
+services:
+  mysql:
+    container_name: db
+    image: mysql:5.7.17
+    restart: on-failure
+    environment:
+      - MYSQL_ROOT_PASSWORD=verysecret
+      - MYSQL_DATABASE=yii2advanced
+    ports:
+      - 8083:3306
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - internal
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: ./docker/php-fpm/Dockerfile
+    volumes:
+      - .:/var/www/html
+    networks:
+      - internal
+    command: sh -c 'composer install --no-interaction --optimize-autoloader && php-fpm'
+    depends_on:
+      - mysql
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    restart: on-failure
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - php
+    networks:
+      - internal
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8765:80
+    environment:
+      MYSQL_ROOT_PASSWORD: verysecret
+    depends_on:
+      - mysql
+    networks:
+      - internal
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.220.0/28
